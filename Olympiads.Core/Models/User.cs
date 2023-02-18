@@ -15,6 +15,7 @@ public class User
     }
 
     public readonly int Id;
+    public int TeamId;
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }

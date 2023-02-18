@@ -2,16 +2,20 @@
 
 public class Question
 {
-    public Question(int questionId, string questionText, HashSet<QuestionResponse> questionResponses, QuestionResponse rightResponse)
+    public Question(int questionId, string questionText, HashSet<QuestionResponse> questionResponses, QuestionResponse rightResponse, int olympiadId, int countOfScore = 1)
     {
         QuestionId = questionId;
         QuestionText = questionText;
         QuestionResponses = questionResponses;
         RightResponse = rightResponse;
+        OlympiadId = olympiadId;
+        CountOfScore = countOfScore;
     }
 
     public int QuestionId { get; private set; }
-    public string QuestionText { get;  set; }
+    public int OlympiadId { get; private set; }
+    public int CountOfScore { get; set; }
+    public string QuestionText { get; set; }
     public HashSet<QuestionResponse> QuestionResponses { get; private set; }
     public QuestionResponse RightResponse { get; private set; }
 
