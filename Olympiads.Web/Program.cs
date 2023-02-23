@@ -1,5 +1,6 @@
+using Olympiads.DAL;
 
-namespace Olympiads
+namespace Olympiads.Web
 {
     public class Program
     {
@@ -11,8 +12,9 @@ namespace Olympiads
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var app = builder.Build();
+            builder.Services.AddPersistence(builder.Configuration);
 
+            var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
             {

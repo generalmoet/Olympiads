@@ -12,12 +12,16 @@ public class Olympiad
         EndTime = endTime;
     }
 
+    public Olympiad() { }
+
     public int Id { get; }
     public string Name { get; set; }
     public string Description { get; set; }
-    public List<Question> Questions { get; private set; }
+    public List<Question>? Questions { get; private set; }
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
+    public DateTime StartRegistrationTime { get; set; }
+    public DateTime EndRegistrationTime { get; set; }
 
     public void AddQuestion(Question question) => Questions.Add(question);
     public void RemoveQuestion(Question question) => Questions.Remove(question);
