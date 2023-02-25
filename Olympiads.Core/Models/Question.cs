@@ -1,12 +1,13 @@
-﻿namespace Olympiads.Core.Models;
+﻿using Olympiads.Core.Models.Abstractions;
+
+namespace Olympiads.Core.Models;
 
 public class Question
 {
-    public Question(int questionId, string questionText, List<QuestionResponse> questionResponses, int olympiadId, int countOfScore = 1)
+    public Question(int questionId, string questionText, int olympiadId, int countOfScore = 1)
     {
         Id = questionId;
         QuestionText = questionText;
-        QuestionResponses = questionResponses;
         OlympiadId = olympiadId;
         CountOfScore = countOfScore;
     }
@@ -17,16 +18,15 @@ public class Question
     public int OlympiadId { get; private set; }
     public int CountOfScore { get; set; }
     public string QuestionText { get; set; }
-    public List<QuestionResponse> QuestionResponses { get; private set; }
+    public List<QuestionAnswer> QuestionAnswers = new();
+    public List<StudentAnswer> StudentAnswers = new();
 
-    public void AddResponse(QuestionResponse response) => QuestionResponses.Add(response);
+    public void AddAnswer(QuestionAnswer answer) => QuestionAnswers.Add(answer);
     
-    public void RemoveResponse(QuestionResponse response) => QuestionResponses.Remove(response);
+    public void RemoveAnswer(QuestionAnswer answer) => QuestionAnswers.Remove(answer);
 
-    public void UpdateResponse(QuestionResponse newResponse)
+    public void UpdateAnswer(QuestionAnswer newAnswer)
     {
-        QuestionResponses.FirstOrDefault(response => response.Id == newResponse.Id).Update(newResponse);
+        QuestionAnswers.FirstOrDefault(answer => answer.Id == newAnswer.Id).ChangeValue(newAnswer);
     }
-
-    //public void ChangeRightResponse(QuestionResponse resposne) => RightResponse = resposne;
 }

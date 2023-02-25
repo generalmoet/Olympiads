@@ -1,14 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using Olympiads.Core.Models;
+using Olympiads.Core.Models.Abstractions;
 
 namespace Olympiads.Core.Interfaces;
 
-public interface IEntityDbContext : IDisposable
+public interface IEntityDbContext
 {
-    DbSet<Olympiad> Olympiad { get; set; }
-    DbSet<User> Users { get; set; }
-    DbSet<OlympiadTeam> Teams { get; set; }
-    DbSet<Question> Question { get; set; }
-    DbSet<QuestionResponse> QuestionResponses { get; set; }
+    public DbSet<Olympiad> Olympiad { get; set; }
+    public DbSet<Student> Students { get; set; }
+    public DbSet<Team> Teams { get; set; }
+    public DbSet<Question> Question { get; set; }
+    public DbSet<QuestionAnswer> QuestionAnswers { get; set; }
+    public DbSet<StudentAnswer> StudentAnswers { get; set; }
     public Task<int> SaveChangesAsync();
 }

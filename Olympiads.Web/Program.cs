@@ -12,7 +12,7 @@ namespace Olympiads.Web
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddPersistence(builder.Configuration);
+            builder.Services.AddDAL(builder.Configuration);
 
             var app = builder.Build();
 

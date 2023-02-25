@@ -5,9 +5,9 @@ using Olympiads.Core.Interfaces;
 
 namespace Olympiads.DAL;
 
-public static class DependencyInjection
+public static class ServiceCollectionExtension
 {
-    public static IServiceCollection AddPersistence(this IServiceCollection
+    public static IServiceCollection AddDAL(this IServiceCollection
         services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("EntityContext");
@@ -18,6 +18,7 @@ public static class DependencyInjection
         });
         services.AddScoped<IEntityDbContext>(provider =>
             provider.GetService<EntityDbContext>());
+
         return services;
     }
 }

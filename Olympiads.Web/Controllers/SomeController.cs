@@ -16,18 +16,11 @@ namespace Olympiads.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateUser([FromBody] User user)
+        public async Task<ActionResult> CreateUser([FromBody] Student user)
         {
-            var userForAdding = new User()
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Password = user.Password,
-                PhoneNumber = user.PhoneNumber
-            };
+            var userForAdding = new Student(user.FirstName, user.LastName, user.Surname, user.City, user.SchoolClass, user.School, user.Email, user.Password, user.PhoneNumber, user.Birthday);
 
-            _context.Users.Add(userForAdding);
+            _context.Students.Add(userForAdding);
             await _context.SaveChangesAsync();
             return Ok();
         }
