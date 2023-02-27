@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Olympiads.Core.Interfaces;
 using Olympiads.Core.Models;
 using Olympiads.Core.Models.Abstractions;
+using Olympiads.DAL.EntityConfigurations;
+using System.Reflection;
 
 namespace Olympiads.DAL;
 
@@ -19,51 +21,9 @@ public class EntityDbContext : DbContext, IEntityDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Olympiad>()
-            .HasKey(o => o.Id);
-
-        modelBuilder.Entity<Student>()
-            .HasKey(u => u.Id);
-
-        modelBuilder.Entity<Question>()
-            .HasKey(q => q.Id);
-
-        modelBuilder.Entity<QuestionAnswer>()
-            .HasKey(o => o.Id);
-
-        modelBuilder.Entity<Teacher>()
-            .HasKey(t => t.Id);
-
-        modelBuilder.Entity<Student>()
-            .HasOne<Team>()
-            .WithMany(u => u.Students)
-            .HasForeignKey(u => u.TeamId);
-
-        modelBuilder.Entity<Question>()
-            .HasOne<Olympiad>()
-            .WithMany(q => q.Questions)
-            .HasForeignKey(q => q.OlympiadId);
-
-        modelBuilder.Entity<QuestionAnswer>()
-            .HasOne<Question>()
-            .WithMany(q => q.QuestionAnswers)
-            .HasForeignKey(q => q.QuestionId);
-
-        modelBuilder.Entity<StudentAnswer>()
-            .HasOne<Question>()
-            .WithMany(s => s.StudentAnswers)
-            .HasForeignKey(s => s.QuestionId);
-
-        modelBuilder.Entity<Teacher>()
-            .HasOne(t => t.Team)
-            .WithOne(t => t.Teacher)
-            .HasForeignKey<Team>(t => t.TeacherId);
-        
-        modelBuilder.Entity<StudentAnswer>()
-            .HasOne<Student>()
-            .WithMany(s => s.Answers)
-            .HasForeignKey(s => s.StudentId);
-
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(),
+            t => t.GetInterfaces().Any(i =>i.IsGenericType &&
+            i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)));
 
         base.OnModelCreating(modelBuilder);
     }

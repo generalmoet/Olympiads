@@ -29,7 +29,7 @@ public class OlympiadProvider
     {
         var changingOlympiad = await _context.Olympiad.FindAsync(olympiad.Id);
 
-        if (changingOlympiad != null) throw new EntityNotFoundExpection("Entity not found");
+        if (changingOlympiad != null) throw new EntityNotFoundExpection($"{nameof(Olympiad)} not found");
 
         changingOlympiad.Name = olympiad.Name;
         changingOlympiad.Description = olympiad.Description;
