@@ -8,9 +8,9 @@ public class TeacherConfiguratons : IEntityTypeConfiguration<Teacher>
 {
     public void Configure(EntityTypeBuilder<Teacher> builder)
     {
-        builder.HasKey(t => t.Id);
-        builder.HasOne(t => t.Team)
-            .WithOne(t => t.Teacher)
-            .HasForeignKey<Team>(t => t.TeacherId);
+        builder.HasKey(teacher => teacher.Id);
+        builder.HasOne(teacher => teacher.Team)
+            .WithOne(team => team.Teacher)
+            .HasForeignKey<Team>(team => team.TeacherId);
     }
 }

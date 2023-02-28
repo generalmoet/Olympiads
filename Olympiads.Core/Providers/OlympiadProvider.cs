@@ -1,4 +1,5 @@
-﻿using Olympiads.Core.Exceptions;
+﻿using Microsoft.EntityFrameworkCore;
+using Olympiads.Core.Exceptions;
 using Olympiads.Core.Interfaces;
 using Olympiads.Core.Models;
 
@@ -15,14 +16,21 @@ public class OlympiadProvider
     
     public async Task<int> CreateOlympiad(Olympiad olympiad)
     {
+        if (_context.Olympiad.Count() > 1) throw new Exception("To much olympiads");
         var result = _context.Olympiad.Add(olympiad).Entity.Id;
+
         await _context.SaveChangesAsync();
+
         return result;
     }
 
     public async Task<Olympiad> GetOlympiad(int id)
     {
-        return await _context.Olympiad.FindAsync(id);
+        var result = _context.Olympiad.Include("Questions").Include("QuestionAnswers").FirstOrDefault();
+
+        if (result != null) throw new EntityNotFoundExpection($"{nameof(Olympiad)} not found");
+
+        return result;
     }
 
     public async Task<Olympiad> UpdateOlympiad(Olympiad olympiad)
@@ -43,4 +51,16 @@ public class OlympiadProvider
         return changingOlympiad;
     }
 
+    public async Task<int> DeleteOlympliad(int id)
+    {
+        var deletingOlympiad = await _context.Olympiad.FindAsync(id);
+
+        if (deletingOlympiad != null) throw new EntityNotFoundExpection($"{nameof(Olympiad)} not found");
+
+        var result = _context.Olympiad.Remove(deletingOlympiad).Entity.Id;
+
+        await _context.SaveChangesAsync();
+
+        return result;
+    }
 }

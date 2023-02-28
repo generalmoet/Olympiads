@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Olympiads.DAL;
@@ -11,9 +12,11 @@ using Olympiads.DAL;
 namespace Olympiads.DAL.Migrations
 {
     [DbContext(typeof(EntityDbContext))]
-    partial class EntityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230228161449_AddedConfigurationsV6")]
+    partial class AddedConfigurationsV6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,16 +174,14 @@ namespace Olympiads.DAL.Migrations
             modelBuilder.Entity("Olympiads.Core.Models.StudentAnswer", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("QuestionId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("integer");
+                    b.Property<string>("StudentEmail")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -189,8 +190,6 @@ namespace Olympiads.DAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
-
-                    b.HasIndex("StudentId");
 
                     b.ToTable("StudentAnswers");
                 });
@@ -250,10 +249,7 @@ namespace Olympiads.DAL.Migrations
             modelBuilder.Entity("Olympiads.Core.Models.Team", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -267,12 +263,6 @@ namespace Olympiads.DAL.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.HasIndex("TeacherId")
-                        .IsUnique();
 
                     b.ToTable("Teams");
                 });
@@ -304,15 +294,15 @@ namespace Olympiads.DAL.Migrations
 
             modelBuilder.Entity("Olympiads.Core.Models.StudentAnswer", b =>
                 {
-                    b.HasOne("Olympiads.Core.Models.Question", null)
-                        .WithMany("StudentAnswers")
-                        .HasForeignKey("QuestionId")
+                    b.HasOne("Olympiads.Core.Models.Student", null)
+                        .WithMany("Answers")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Olympiads.Core.Models.Student", null)
-                        .WithMany("Answers")
-                        .HasForeignKey("StudentId")
+                    b.HasOne("Olympiads.Core.Models.Question", null)
+                        .WithMany("StudentAnswers")
+                        .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -321,7 +311,7 @@ namespace Olympiads.DAL.Migrations
                 {
                     b.HasOne("Olympiads.Core.Models.Teacher", "Teacher")
                         .WithOne("Team")
-                        .HasForeignKey("Olympiads.Core.Models.Team", "TeacherId")
+                        .HasForeignKey("Olympiads.Core.Models.Team", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

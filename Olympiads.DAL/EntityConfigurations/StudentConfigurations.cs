@@ -8,9 +8,9 @@ public class StudentConfigurations : IEntityTypeConfiguration<Student>
 {
     public void Configure(EntityTypeBuilder<Student> builder)
     {
-        builder.HasKey(s => s.Id);
+        builder.HasKey(student => student.Id);
         builder.HasOne<Team>()
-            .WithMany(u => u.Students)
-            .HasForeignKey(u => u.TeamId);
+            .WithMany(team => team.Students)
+            .HasForeignKey(student => student.TeamId);
     }
 }

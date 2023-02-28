@@ -25,4 +25,8 @@ public class Olympiad
 
     public void AddQuestion(Question question) => Questions.Add(question);
     public void RemoveQuestion(Question question) => Questions.Remove(question);
+    public void UpdateQuestion(Question updateQuestion)
+    {
+        Questions.FirstOrDefault(question => question.Id == updateQuestion.Id).UpdateQuestion(updateQuestion);
+    }
 }

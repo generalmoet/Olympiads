@@ -19,6 +19,5 @@ namespace Olympiads.Core.Models
         }
 
         public int StudentId { get; set; }
-
     }
 }

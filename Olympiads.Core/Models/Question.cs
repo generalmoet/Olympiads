@@ -25,6 +25,12 @@ public class Question
     
     public void RemoveAnswer(QuestionAnswer answer) => QuestionAnswers.Remove(answer);
 
+    public void UpdateQuestion(Question questions)
+    {
+        CountOfScore = questions.CountOfScore;
+        QuestionText = questions.QuestionText;
+    }
+
     public void UpdateAnswer(QuestionAnswer newAnswer)
     {
         QuestionAnswers.FirstOrDefault(answer => answer.Id == newAnswer.Id).ChangeValue(newAnswer);
