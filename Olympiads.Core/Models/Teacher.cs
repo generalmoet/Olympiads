@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Olympiads.Core.Models.Abstractions;
+﻿using Olympiads.Core.Models.Abstractions;
 
 namespace Olympiads.Core.Models;
 

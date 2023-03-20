@@ -8,9 +8,9 @@ public class QuestionAnswerConfigurations : IEntityTypeConfiguration<QuestionAns
 {
     public void Configure(EntityTypeBuilder<QuestionAnswer> builder)
     {
-        builder.HasKey(q => q.Id);
+        builder.HasKey(answer => answer.Id);
         builder.HasOne<Question>()
-            .WithMany(q => q.QuestionAnswers)
-            .HasForeignKey(q => q.QuestionId);
+            .WithMany(question => question.QuestionAnswers)
+            .HasForeignKey(answer => answer.QuestionId);
     }
 }

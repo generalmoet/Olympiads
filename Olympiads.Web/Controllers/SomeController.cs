@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Olympiads.Core.Interfaces;
 using Olympiads.Core.Models;
+using Olympiads.Core.Providers;
 
 namespace Olympiads.Web.Controllers
 {
@@ -12,35 +14,77 @@ namespace Olympiads.Web.Controllers
 
         public SomeController(IEntityDbContext context)
         {
-            _context= context;
+            _context = context;
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateUser([FromBody] Student user)
-        {
-            var userForAdding = new Student(user.FirstName, user.LastName, user.Surname, user.City, user.SchoolClass, user.School, user.Email, user.Password, user.PhoneNumber, user.Birthday);
-
-            _context.Students.Add(userForAdding);
-            await _context.SaveChangesAsync();
-            return Ok();
-        }
-
-        [HttpPost]
+        [Authorize(Policy = "Administrator")]
         public async Task<ActionResult> CreateOlympiad([FromBody] Olympiad olympiad)
         {
-            var olympiadForAdding = new Olympiad()
+            var olympiadProvider = new OlympiadProvider(_context);
+            int olympiadId;
+            try
             {
-                Name = olympiad.Name,
-                Description= olympiad.Description,
-                StartTime= olympiad.StartTime,
-                EndTime= olympiad.EndTime,
-                StartRegistrationTime= olympiad.StartRegistrationTime,
-                EndRegistrationTime= olympiad.EndRegistrationTime
-            };
+                olympiadId = await olympiadProvider.CreateOlympiad(olympiad);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
-            _context.Olympiad.Add(olympiadForAdding);
-            await _context.SaveChangesAsync();
-            return Ok();
+            return Ok(olympiadId);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "Administrator")]
+        public async Task<ActionResult> CreateQuestion([FromBody] Question question)
+        {
+            var questionProvider = new QuestionProvider(_context);
+            int questionId;
+            try
+            {
+                questionId = await questionProvider.CraeteQuestion(question);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(questionId);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateQuestionAnswer([FromBody] QuestionAnswer answer)
+        {
+            var questionAnswerProvider = new QuestionAnswerProvider(_context);
+            int answerId;
+            try
+            {
+                answerId = await questionAnswerProvider.CreateQuestionAnswer(answer);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(answerId);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<Olympiad>> GetOlympiad()
+        {
+            var olympiadProvider = new OlympiadProvider(_context);
+            Olympiad olympiad;
+            try
+            {
+                olympiad = await olympiadProvider.GetOlympiad();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+            return Ok(olympiad);
         }
     }
 }

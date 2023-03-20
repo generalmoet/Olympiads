@@ -8,6 +8,7 @@ public class TeamConfigurations : IEntityTypeConfiguration<Team>
 {
     public void Configure(EntityTypeBuilder<Team> builder)
     {
+        builder.HasKey(team => team.TeacherId);
         builder.HasIndex(team => team.Name).IsUnique();
     }
 }

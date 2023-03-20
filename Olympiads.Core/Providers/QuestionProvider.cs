@@ -14,11 +14,12 @@ public class QuestionProvider
         _context = context;
     }
 
-    public async Task<Question> CraeteQuestion(Question question)
+    public async Task<int> CraeteQuestion(Question question)
     {
-        var result = _context.Questions.Add(question).Entity;
-
+        _context.Questions.Add(question);
         await _context.SaveChangesAsync();
+
+        var result = question.Id;
 
         return result;
     }
@@ -27,7 +28,7 @@ public class QuestionProvider
     {
         var result = await _context.Questions.ToListAsync();
 
-        if (result != null) throw new EntityNotFoundExpection($"{nameof(Question)} not found");
+        if (result is null) throw new EntityNotFoundExpection($"{nameof(Question)} not found");
 
         return result; 
     }
@@ -36,7 +37,7 @@ public class QuestionProvider
     {
         var result = _context.Questions.Find(updateQuestion.Id);
 
-        if (result != null) throw new EntityNotFoundExpection($"{nameof(Question)} not found");
+        if (result is null) throw new EntityNotFoundExpection($"{nameof(Question)} not found");
 
         result.UpdateQuestion(updateQuestion);
 
@@ -49,10 +50,12 @@ public class QuestionProvider
     {
         var question = _context.Questions.Find(id);
 
-        if (question != null) throw new EntityNotFoundExpection($"{nameof(Question)} not found");
+        if (question is null) throw new EntityNotFoundExpection($"{nameof(Question)} not found");
 
-        var result = _context.Questions.Remove(question).Entity.Id;
+        _context.Questions.Remove(question);
         await _context.SaveChangesAsync();
+
+        var result = question.Id;
 
         return result;
     }

@@ -16,9 +16,11 @@ public class QuestionAnswerProvider
 
     public async Task<int> CreateQuestionAnswer(QuestionAnswer questionAnswer)
     {
-        var result = _context.QuestionAnswers.Add(questionAnswer).Entity.Id;
+        _context.QuestionAnswers.Add(questionAnswer);
 
         await _context.SaveChangesAsync();
+
+        var result = questionAnswer.Id;
 
         return result;
     }
@@ -27,7 +29,7 @@ public class QuestionAnswerProvider
     {
         var result = await _context.QuestionAnswers.ToListAsync();
 
-        if (result != null) throw new EntityNotFoundExpection($"{nameof(QuestionAnswer)} not found");
+        if (result is null) throw new EntityNotFoundExpection($"{nameof(QuestionAnswer)} not found");
 
         return result;
     }
@@ -36,7 +38,7 @@ public class QuestionAnswerProvider
     {
         var result = _context.QuestionAnswers.Find(updateQuestionAnswer.Id);
 
-        if (result != null) throw new EntityNotFoundExpection($"{nameof(QuestionAnswer)} not found");
+        if (result is null) throw new EntityNotFoundExpection($"{nameof(QuestionAnswer)} not found");
 
         result.ChangeValue(updateQuestionAnswer);
 
@@ -49,10 +51,12 @@ public class QuestionAnswerProvider
     {
         var answer = _context.QuestionAnswers.Find(id);
 
-        if (answer != null) throw new EntityNotFoundExpection($"{nameof(QuestionAnswer)} not found");
+        if (answer is null) throw new EntityNotFoundExpection($"{nameof(QuestionAnswer)} not found");
 
-        var result = _context.QuestionAnswers.Remove(answer).Entity.Id;
+        _context.QuestionAnswers.Remove(answer);
         await _context.SaveChangesAsync();
+
+        var result = answer.Id;
 
         return result;
     }

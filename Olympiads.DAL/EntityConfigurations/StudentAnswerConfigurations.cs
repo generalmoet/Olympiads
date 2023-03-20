@@ -9,11 +9,11 @@ public class StudentAnswerConfigurations : IEntityTypeConfiguration<StudentAnswe
     public void Configure(EntityTypeBuilder<StudentAnswer> builder)
     {
         builder.HasOne<Question>()
-            .WithMany(s => s.StudentAnswers)
-            .HasForeignKey(s => s.QuestionId);
+            .WithMany(question => question.StudentAnswers)
+            .HasForeignKey(answer => answer.QuestionId);
 
         builder.HasOne<Student>()
-            .WithMany(s => s.Answers)
-            .HasForeignKey(s => s.StudentId);
+            .WithMany(student => student.Answers)
+            .HasForeignKey(answer => answer.StudentId);
     }
 }

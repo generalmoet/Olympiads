@@ -4,9 +4,8 @@ namespace Olympiads.Core.Models;
 
 public class Question
 {
-    public Question(int questionId, string questionText, int olympiadId, int countOfScore = 1)
+    public Question(string questionText, int olympiadId, int countOfScore = 1)
     {
-        Id = questionId;
         QuestionText = questionText;
         OlympiadId = olympiadId;
         CountOfScore = countOfScore;
@@ -15,11 +14,11 @@ public class Question
     public Question() { }
 
     public int Id { get; private set; }
-    public int OlympiadId { get; private set; }
+    public int OlympiadId { get;  set; }
     public int CountOfScore { get; set; }
     public string QuestionText { get; set; }
-    public List<QuestionAnswer> QuestionAnswers = new();
-    public List<StudentAnswer> StudentAnswers = new();
+    public List<QuestionAnswer>? QuestionAnswers;
+    public List<StudentAnswer>? StudentAnswers;
 
     public void AddAnswer(QuestionAnswer answer) => QuestionAnswers.Add(answer);
     

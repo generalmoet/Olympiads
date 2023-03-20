@@ -17,18 +17,23 @@ public class OlympiadProvider
     public async Task<int> CreateOlympiad(Olympiad olympiad)
     {
         if (_context.Olympiad.Count() > 1) throw new Exception("To much olympiads");
-        var result = _context.Olympiad.Add(olympiad).Entity.Id;
+        olympiad.StartTime = olympiad.StartTime.ToUniversalTime();
+        olympiad.EndTime = olympiad.EndTime.ToUniversalTime();
+        olympiad.StartRegistrationTime = olympiad.StartRegistrationTime.ToUniversalTime();
+        olympiad.EndRegistrationTime = olympiad.EndRegistrationTime.ToUniversalTime();
+        _context.Olympiad.Add(olympiad);
 
         await _context.SaveChangesAsync();
 
+        var result = olympiad.Id;
         return result;
     }
 
-    public async Task<Olympiad> GetOlympiad(int id)
+    public async Task<Olympiad> GetOlympiad()
     {
-        var result = _context.Olympiad.Include("Questions").Include("QuestionAnswers").FirstOrDefault();
+        var result = await _context.Olympiad.Include(o => o.Questions).ThenInclude(q => q.QuestionAnswers).Include(o => o.Questions).ThenInclude(q => q.StudentAnswers).FirstOrDefaultAsync();
 
-        if (result != null) throw new EntityNotFoundExpection($"{nameof(Olympiad)} not found");
+        if (result is null) throw new EntityNotFoundExpection($"{nameof(Olympiad)} not found");
 
         return result;
     }
@@ -37,7 +42,7 @@ public class OlympiadProvider
     {
         var changingOlympiad = await _context.Olympiad.FindAsync(olympiad.Id);
 
-        if (changingOlympiad != null) throw new EntityNotFoundExpection($"{nameof(Olympiad)} not found");
+        if (changingOlympiad is null) throw new EntityNotFoundExpection($"{nameof(Olympiad)} not found");
 
         changingOlympiad.Name = olympiad.Name;
         changingOlympiad.Description = olympiad.Description;
@@ -55,11 +60,13 @@ public class OlympiadProvider
     {
         var deletingOlympiad = await _context.Olympiad.FindAsync(id);
 
-        if (deletingOlympiad != null) throw new EntityNotFoundExpection($"{nameof(Olympiad)} not found");
+        if (deletingOlympiad is null) throw new EntityNotFoundExpection($"{nameof(Olympiad)} not found");
 
-        var result = _context.Olympiad.Remove(deletingOlympiad).Entity.Id;
+        _context.Olympiad.Remove(deletingOlympiad);
 
         await _context.SaveChangesAsync();
+
+        var result = deletingOlympiad.Id;
 
         return result;
     }

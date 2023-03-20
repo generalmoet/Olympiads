@@ -16,6 +16,7 @@ public class EntityDbContext : DbContext, IEntityDbContext
     public DbSet<Question> Questions { get; set; }
     public DbSet<QuestionAnswer> QuestionAnswers { get; set; }
     public DbSet<StudentAnswer> StudentAnswers { get; set; }
+    public DbSet<Article> Articles { get; set; }
 
     public EntityDbContext(DbContextOptions<EntityDbContext> options) : base(options) { }
 
@@ -28,8 +29,8 @@ public class EntityDbContext : DbContext, IEntityDbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public Task<int> SaveChangesAsync()
+    public async Task<int> SaveChangesAsync()
     {
-        return base.SaveChangesAsync();
+        return await base.SaveChangesAsync();
     }
 }

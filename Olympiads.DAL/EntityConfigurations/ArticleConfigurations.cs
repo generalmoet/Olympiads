@@ -4,10 +4,10 @@ using Olympiads.Core.Models;
 
 namespace Olympiads.DAL.EntityConfigurations;
 
-public class OlympiadConfigurations : IEntityTypeConfiguration<Olympiad>
+public class ArticleConfigurations : IEntityTypeConfiguration<Article>
 {
-    public void Configure(EntityTypeBuilder<Olympiad> builder)
+    public void Configure(EntityTypeBuilder<Article> builder)
     {
-        builder.HasKey(olympiad => olympiad.Id);
+        builder.HasKey(article => article.Id);
     }
 }
