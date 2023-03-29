@@ -15,7 +15,6 @@ public static class ServiceCollectionExtension
         services.AddDbContext<EntityDbContext>(options =>
         {
             options.UseNpgsql(connectionString);
-            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
         services.AddScoped<IEntityDbContext>(provider =>
             provider.GetService<EntityDbContext>());

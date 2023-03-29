@@ -12,7 +12,7 @@ using Olympiads.DAL;
 namespace Olympiads.DAL.Migrations
 {
     [DbContext(typeof(EntityDbContext))]
-    [Migration("20230329163614_InitMigration")]
+    [Migration("20230329185226_InitMigration")]
     partial class InitMigration
     {
         /// <inheritdoc />
@@ -59,20 +59,20 @@ namespace Olympiads.DAL.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("EndRegistrationTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("EndTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("StartRegistrationTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -162,7 +162,7 @@ namespace Olympiads.DAL.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Birthday")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -206,10 +206,28 @@ namespace Olympiads.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("TeamId")
+                    b.Property<string>("TeacherName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TeacherPhone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TeacherPost")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("TeamId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
 
                     b.HasIndex("TeamId");
 
@@ -240,7 +258,7 @@ namespace Olympiads.DAL.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentAnswers");
+                    b.ToTable("UserAnswers");
                 });
 
             modelBuilder.Entity("Olympiads.Core.Models.Question", b =>
@@ -264,14 +282,16 @@ namespace Olympiads.DAL.Migrations
             modelBuilder.Entity("Olympiads.Core.Models.User", b =>
                 {
                     b.HasOne("Olympiads.Core.Models.Team", null)
-                        .WithMany("Students")
-                        .HasForeignKey("TeamId");
+                        .WithMany("Users")
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Olympiads.Core.Models.UserAnswer", b =>
                 {
                     b.HasOne("Olympiads.Core.Models.Question", null)
-                        .WithMany("StudentAnswers")
+                        .WithMany("UserAnswers")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -292,12 +312,12 @@ namespace Olympiads.DAL.Migrations
                 {
                     b.Navigation("QuestionAnswers");
 
-                    b.Navigation("StudentAnswers");
+                    b.Navigation("UserAnswers");
                 });
 
             modelBuilder.Entity("Olympiads.Core.Models.Team", b =>
                 {
-                    b.Navigation("Students");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Olympiads.Core.Models.User", b =>

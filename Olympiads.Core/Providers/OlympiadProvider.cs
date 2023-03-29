@@ -31,7 +31,7 @@ public class OlympiadProvider
 
     public async Task<Olympiad> GetOlympiad()
     {
-        var result = await _context.Olympiad.Include(o => o.Questions).ThenInclude(q => q.QuestionAnswers).Include(o => o.Questions).ThenInclude(q => q.StudentAnswers).FirstOrDefaultAsync();
+        var result = await _context.Olympiad.Include(o => o.Questions).ThenInclude(q => q.QuestionAnswers).Include(o => o.Questions).ThenInclude(q => q.UserAnswers).FirstOrDefaultAsync();
 
         if (result is null) throw new EntityNotFoundExpection($"{nameof(Olympiad)} not found");
 

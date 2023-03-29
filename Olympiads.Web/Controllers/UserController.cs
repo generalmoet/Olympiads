@@ -14,11 +14,13 @@ public class UserController : ControllerBase
 {
     private readonly IEntityDbContext _context;
     private readonly IJwtProvider _jwtProvider;
+    private readonly IConfiguration _configuration;
 
-    public UserController(IJwtProvider jwtProvider, IEntityDbContext context)
+    public UserController(IJwtProvider jwtProvider, IEntityDbContext context, IConfiguration configuration)
     {
         _jwtProvider = jwtProvider;
         _context = context;
+        _configuration = configuration;
     }
 
     [HttpPost]
@@ -26,11 +28,7 @@ public class UserController : ControllerBase
     {
         var authProvider = new AuthenticationProvider(_context, _jwtProvider);
         var token = await authProvider.Login(request);
-        bool isAdmin = false;
-        var claim = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email && claim.Value == "tw2xfeed@gmail.com");
-
-        if (claim != null)
-            isAdmin = true;
+        bool isAdmin = _configuration.GetSection("Admins").AsEnumerable().Any(str => str.Value == request.Email);
 
         return Ok(new { token, isAdmin });
     }
@@ -39,8 +37,7 @@ public class UserController : ControllerBase
     public async Task<IActionResult> RegisterUser([FromBody] RegisterRequest request)
     {
         var authProvider = new AuthenticationProvider(_context, _jwtProvider);
-        var token = authProvider.Register(request);
-
+        await authProvider.Register(request);
         return Ok();
     }
 
@@ -53,7 +50,7 @@ public class UserController : ControllerBase
         _context.Olympiad.RemoveRange(_context.Olympiad);
         _context.QuestionAnswers.RemoveRange(_context.QuestionAnswers);
         _context.Questions.RemoveRange(_context.Questions);
-        _context.StudentAnswers.RemoveRange(_context.StudentAnswers);
+        _context.UserAnswers.RemoveRange(_context.UserAnswers);
         _context.Users.RemoveRange(_context.Users);
 
         await _context.SaveChangesAsync();

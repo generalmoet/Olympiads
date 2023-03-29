@@ -14,10 +14,14 @@ public class EntityDbContext : DbContext, IEntityDbContext
     public DbSet<Team> Teams { get; set; }
     public DbSet<Question> Questions { get; set; }
     public DbSet<QuestionAnswer> QuestionAnswers { get; set; }
-    public DbSet<UserAnswer> StudentAnswers { get; set; }
+    public DbSet<UserAnswer> UserAnswers { get; set; }
     public DbSet<Article> Articles { get; set; }
 
-    public EntityDbContext(DbContextOptions<EntityDbContext> options) : base(options) { }
+    public EntityDbContext(DbContextOptions<EntityDbContext> options) : base(options)
+    {
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

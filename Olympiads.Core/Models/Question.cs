@@ -1,14 +1,14 @@
-﻿using Olympiads.Core.Models.Abstractions;
-
-namespace Olympiads.Core.Models;
+﻿namespace Olympiads.Core.Models;
 
 public class Question
 {
-    public Question(string questionText, int olympiadId, int countOfScore = 1)
+    public Question(string questionText, int olympiadId, List<QuestionAnswer> questionAnswers, List<UserAnswer> userAnswers, int countOfScore = 1)
     {
         QuestionText = questionText;
         OlympiadId = olympiadId;
         CountOfScore = countOfScore;
+        QuestionAnswers = questionAnswers;
+        UserAnswers = userAnswers;
     }
 
     public Question() { }
@@ -18,7 +18,7 @@ public class Question
     public int CountOfScore { get; set; }
     public string QuestionText { get; set; }
     public List<QuestionAnswer>? QuestionAnswers;
-    public List<UserAnswer>? StudentAnswers;
+    public List<UserAnswer>? UserAnswers;
 
     public void AddAnswer(QuestionAnswer answer) => QuestionAnswers.Add(answer);
     

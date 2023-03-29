@@ -28,12 +28,11 @@ namespace Olympiads.Web
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("Administrator", policy =>
-                    policy.Requirements.Add(new AdministratorRequirement(new[] { "tw1xfeed@gmail.com" })));
+                    policy.Requirements.Add(new AdministratorRequirement(builder.Configuration.GetValue<string[]>("Admins") )));
             });
 
             builder.Services.ConfigureOptions<JwtOptionsSetup>();
             builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
-
 
             var app = builder.Build();
 

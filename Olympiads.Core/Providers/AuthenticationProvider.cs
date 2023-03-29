@@ -3,6 +3,7 @@ using Olympiads.Core.Models;
 using Olympiads.Core.Interfaces;
 using Olympiads.Core.Authorization.Login;
 using Olympiads.Core.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Olympiads.Core.Providers;
 
@@ -19,7 +20,20 @@ public class AuthenticationProvider
 
     public async Task Register(RegisterRequest request)
     {
-        var student = new User()
+        var team = new Team();
+        if (_context.Teams.Count() > 0)
+        {
+            team = _context.Teams.Where(team => team.Name == request.TeamName && team.City == request.City).First();
+        }
+
+        if (team is null || _context.Teams.Count() == 0)
+        {
+            team = new Team(request.TeamName, request.City, new List<User>());
+            _context.Teams.Add(team);
+            await _context.SaveChangesAsync();
+        }
+
+        var user = new User()
         {
             FirstName = request.FirstName,
             LastName = request.LastName,
@@ -30,10 +44,14 @@ public class AuthenticationProvider
             Email = request.Email,
             Birthday = request.Birthday,
             PhoneNumber = request.PhoneNumber,
-            Password = request.Password
+            Password = request.Password,
+            TeacherName = request.TeacherName,
+            TeacherPhone = request.TeacherPhone,
+            TeacherPost = request.TeacherPost
         };
 
-        _context.Users.Add(student);
+        team = await _context.Teams.Include(team => team.Users).Where(team => team.Name == request.TeamName).FirstOrDefaultAsync();
+        team.Users.Add(user);
 
         await _context.SaveChangesAsync();
     }

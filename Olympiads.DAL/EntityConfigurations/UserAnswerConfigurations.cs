@@ -9,7 +9,7 @@ public class UserAnswerConfigurations : IEntityTypeConfiguration<UserAnswer>
     public void Configure(EntityTypeBuilder<UserAnswer> builder)
     {
         builder.HasOne<Question>()
-            .WithMany(question => question.StudentAnswers)
+            .WithMany(question => question.UserAnswers)
             .HasForeignKey(answer => answer.QuestionId);
 
         builder.HasOne<User>()

@@ -10,7 +10,7 @@ public interface IEntityDbContext
     public DbSet<Team> Teams { get; set; }
     public DbSet<Question> Questions { get; set; }
     public DbSet<QuestionAnswer> QuestionAnswers { get; set; }
-    public DbSet<UserAnswer> StudentAnswers { get; set; }
+    public DbSet<UserAnswer> UserAnswers { get; set; }
     public DbSet<Article> Articles { get; set; }
     public Task<int> SaveChangesAsync();
 }
