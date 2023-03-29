@@ -1,4 +1,4 @@
-﻿using Olympiads.Core.Models.Abstractions;
+﻿using Olympiads.Core.Models;
 
 namespace Olympiads.Core.Interfaces;
 

@@ -12,8 +12,8 @@ using Olympiads.DAL;
 namespace Olympiads.DAL.Migrations
 {
     [DbContext(typeof(EntityDbContext))]
-    [Migration("20230225100930_ChangeAnswerModelv2")]
-    partial class ChangeAnswerModelv2
+    [Migration("20230329163614_InitMigration")]
+    partial class InitMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,27 @@ namespace Olympiads.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Olympiads.Core.Models.Article", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Articles");
+                });
 
             modelBuilder.Entity("Olympiads.Core.Models.Olympiad", b =>
                 {
@@ -80,7 +101,7 @@ namespace Olympiads.DAL.Migrations
 
                     b.HasIndex("OlympiadId");
 
-                    b.ToTable("Question");
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("Olympiads.Core.Models.QuestionAnswer", b =>
@@ -108,7 +129,31 @@ namespace Olympiads.DAL.Migrations
                     b.ToTable("QuestionAnswers");
                 });
 
-            modelBuilder.Entity("Olympiads.Core.Models.Student", b =>
+            modelBuilder.Entity("Olympiads.Core.Models.Team", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("Olympiads.Core.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,10 +213,10 @@ namespace Olympiads.DAL.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Olympiads.Core.Models.StudentAnswer", b =>
+            modelBuilder.Entity("Olympiads.Core.Models.UserAnswer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -191,93 +236,11 @@ namespace Olympiads.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("QuestionId");
+
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudentAnswers");
-                });
-
-            modelBuilder.Entity("Olympiads.Core.Models.Teacher", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("School")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("SchoolClass")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int?>("TeamId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TeamId1")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TeamId")
-                        .IsUnique();
-
-                    b.HasIndex("TeamId1");
-
-                    b.ToTable("Teachers");
-                });
-
-            modelBuilder.Entity("Olympiads.Core.Models.Team", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("Olympiads.Core.Models.Question", b =>
@@ -292,41 +255,32 @@ namespace Olympiads.DAL.Migrations
             modelBuilder.Entity("Olympiads.Core.Models.QuestionAnswer", b =>
                 {
                     b.HasOne("Olympiads.Core.Models.Question", null)
-                        .WithMany("Answers")
+                        .WithMany("QuestionAnswers")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Olympiads.Core.Models.Student", b =>
+            modelBuilder.Entity("Olympiads.Core.Models.User", b =>
                 {
                     b.HasOne("Olympiads.Core.Models.Team", null)
                         .WithMany("Students")
                         .HasForeignKey("TeamId");
                 });
 
-            modelBuilder.Entity("Olympiads.Core.Models.StudentAnswer", b =>
+            modelBuilder.Entity("Olympiads.Core.Models.UserAnswer", b =>
                 {
-                    b.HasOne("Olympiads.Core.Models.Student", null)
+                    b.HasOne("Olympiads.Core.Models.Question", null)
+                        .WithMany("StudentAnswers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Olympiads.Core.Models.User", null)
                         .WithMany("Answers")
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Olympiads.Core.Models.Teacher", b =>
-                {
-                    b.HasOne("Olympiads.Core.Models.Team", null)
-                        .WithOne("Teacher")
-                        .HasForeignKey("Olympiads.Core.Models.Teacher", "TeamId");
-
-                    b.HasOne("Olympiads.Core.Models.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("Olympiads.Core.Models.Olympiad", b =>
@@ -336,19 +290,19 @@ namespace Olympiads.DAL.Migrations
 
             modelBuilder.Entity("Olympiads.Core.Models.Question", b =>
                 {
-                    b.Navigation("Answers");
-                });
+                    b.Navigation("QuestionAnswers");
 
-            modelBuilder.Entity("Olympiads.Core.Models.Student", b =>
-                {
-                    b.Navigation("Answers");
+                    b.Navigation("StudentAnswers");
                 });
 
             modelBuilder.Entity("Olympiads.Core.Models.Team", b =>
                 {
                     b.Navigation("Students");
+                });
 
-                    b.Navigation("Teacher");
+            modelBuilder.Entity("Olympiads.Core.Models.User", b =>
+                {
+                    b.Navigation("Answers");
                 });
 #pragma warning restore 612, 618
         }

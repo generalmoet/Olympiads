@@ -42,7 +42,7 @@ namespace Olympiads.Web
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader());
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();

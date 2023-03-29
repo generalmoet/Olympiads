@@ -18,7 +18,7 @@ public class Question
     public int CountOfScore { get; set; }
     public string QuestionText { get; set; }
     public List<QuestionAnswer>? QuestionAnswers;
-    public List<StudentAnswer>? StudentAnswers;
+    public List<UserAnswer>? StudentAnswers;
 
     public void AddAnswer(QuestionAnswer answer) => QuestionAnswers.Add(answer);
     

@@ -4,6 +4,7 @@ using Olympiads.Core.Authorization.Login;
 using Olympiads.Core.Authorization.Register;
 using Olympiads.Core.Interfaces;
 using Olympiads.Core.Providers;
+using System.Security.Claims;
 
 namespace Olympiads.Web.Controllers;
 
@@ -25,8 +26,13 @@ public class UserController : ControllerBase
     {
         var authProvider = new AuthenticationProvider(_context, _jwtProvider);
         var token = await authProvider.Login(request);
+        bool isAdmin = false;
+        var claim = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email && claim.Value == "tw2xfeed@gmail.com");
 
-        return Ok(token);
+        if (claim != null)
+            isAdmin = true;
+
+        return Ok(new { token, isAdmin });
     }
 
     [HttpPost]
@@ -48,8 +54,7 @@ public class UserController : ControllerBase
         _context.QuestionAnswers.RemoveRange(_context.QuestionAnswers);
         _context.Questions.RemoveRange(_context.Questions);
         _context.StudentAnswers.RemoveRange(_context.StudentAnswers);
-        _context.Students.RemoveRange(_context.Students);
-        _context.Teachers.RemoveRange(_context.Teachers);
+        _context.Users.RemoveRange(_context.Users);
 
         await _context.SaveChangesAsync();
 

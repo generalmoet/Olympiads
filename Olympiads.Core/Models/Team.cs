@@ -2,21 +2,18 @@
 
 public class Team
 {
-    public Team(string name, string city, Teacher teacher)
+    public Team(string name, string city)
     {
         Name = name;
         City = city;
-        Teacher = teacher;
-        TeacherId = teacher.Id;
     }
 
     public Team() { }
+    public int Id { get; }
     public string Name { get; set; }
     public string City { get; set; }
-    public Teacher Teacher { get; set; }
-    public int TeacherId { get; set; }
-    public List<Student>? Students { get; set; }
+    public List<User>? Students { get; set; }
 
-    public void AddUser(Student user) => Students.Add(user);
-    public void RemoveUser(Student user) => Students.Remove(user);
+    public void AddUser(User user) => Students.Add(user);
+    public void RemoveUser(User user) => Students.Remove(user);
 }

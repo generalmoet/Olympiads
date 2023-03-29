@@ -2,11 +2,11 @@
 
 namespace Olympiads.Core.Models;
 
-public class StudentAnswer : Answer
+public class UserAnswer : Answer
 {
-    public StudentAnswer() { }
+    public UserAnswer() { }
 
-    public StudentAnswer(string value, int questionId, int studentId) : base(value, questionId)
+    public UserAnswer(string value, int questionId, int studentId) : base(value, questionId)
     {
         Value= value;
         QuestionId= questionId;

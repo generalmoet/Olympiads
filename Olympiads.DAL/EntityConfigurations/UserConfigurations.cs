@@ -4,13 +4,13 @@ using Olympiads.Core.Models;
 
 namespace Olympiads.DAL.EntityConfigurations;
 
-public class StudentConfigurations : IEntityTypeConfiguration<Student>
+public class UserConfigurations : IEntityTypeConfiguration<User>
 {
-    public void Configure(EntityTypeBuilder<Student> builder)
+    public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.HasKey(student => student.Id);
+        builder.HasKey(user => user.Id);
         builder.HasOne<Team>()
             .WithMany(team => team.Students)
-            .HasForeignKey(student => student.TeamId);
+            .HasForeignKey(user => user.TeamId);
     }
 }

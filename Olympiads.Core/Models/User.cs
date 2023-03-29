@@ -1,8 +1,8 @@
-﻿namespace Olympiads.Core.Models.Abstractions;
+﻿namespace Olympiads.Core.Models;
 
-public abstract class User
+public class User
 {
-    public User(string firstName, string lastName, string surname, string city, string schoolClass, string school, string email, string password, string phoneNubmer)
+    public User(string firstName, string lastName, string surname, string city, string schoolClass, string school, string email, string password, string phoneNubmer, DateTime birthday)
     {
         FirstName = firstName;
         LastName = lastName;
@@ -13,6 +13,7 @@ public abstract class User
         Email = email;
         Password = password;
         PhoneNumber = phoneNubmer;
+        Birthday = birthday;
     }
 
     public User() { }
@@ -28,4 +29,8 @@ public abstract class User
     public string Password { get; set; }
     public string PhoneNumber { get; set; }
     public bool EmailConfirmed { get; set; }
+    public int? TeamId { get; set; }
+    public DateTime Birthday { get; set; }
+    public List<UserAnswer>? Answers { get; set; }
+    public int Scores { get; private set; }
 }
